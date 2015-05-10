@@ -157,6 +157,7 @@ class robotiqBaseSModel:
         #Message to output
         message = inputMsg.SModel_robot_input()
 
+
         if len(status) > 0:
 
             #Assign the values to their respective variables
@@ -182,6 +183,8 @@ class robotiqBaseSModel:
             message.gPRS =  status[12]
             message.gPOS =  status[13]
             message.gCUS =  status[14]
+        else:
+            message.gFLT =  9 #Hand not powered on, using same fault ID as "The communication chip is not ready (may be booting)."
 
         return message
         
