@@ -43,9 +43,11 @@ The module depends on pymodbus (http://code.google.com/p/pymodbus/) for the Modb
 
 from pymodbus.client.sync import ModbusTcpClient
 from pymodbus.register_read_message import ReadInputRegistersResponse
+from pymodbus.exceptions import ConnectionException
 from math import ceil
 import time
 import threading
+import rospy
 
 class communication:
 
@@ -75,8 +77,11 @@ class communication:
          message.append((data[2*i] << 8) + data[2*i+1])
 
       #To do!: Implement try/except
-      with self.lock:
-         self.client.write_registers(0, message)
+      try:
+          with self.lock:
+             self.client.write_registers(0, message)
+      except ConnectionException as exc:
+           rospy.logerr('Failed to connect to hand, is it on?: %s' % exc)
 
    def getStatus(self, numBytes):
       """Sends a request to read, wait for the response and returns the Gripper status. The method gets the number of bytes to read as an argument"""
@@ -84,16 +89,20 @@ class communication:
 
       #To do!: Implement try/except 
       #Get status from the device
-      with self.lock:
-         response = self.client.read_input_registers(0, numRegs)
+      try:
+          with self.lock:
+             response = self.client.read_input_registers(0, numRegs)
+      except ConnectionException as exc:
+          rospy.logerr('Failed to connect to hand, is it on?: %s' % exc)
+          return []
+      else:
+          #Instantiate output as an empty list
+          output = []
 
-      #Instantiate output as an empty list
-      output = []
+          #Fill the output with the bytes in the appropriate order
+          for i in range(0, numRegs):
+             output.append((response.getRegister(i) & 0xFF00) >> 8)
+             output.append( response.getRegister(i) & 0x00FF)
 
-      #Fill the output with the bytes in the appropriate order
-      for i in range(0, numRegs):
-         output.append((response.getRegister(i) & 0xFF00) >> 8)
-         output.append( response.getRegister(i) & 0x00FF)
-      
-      #Output the result
-      return output
+          #Output the result
+          return output

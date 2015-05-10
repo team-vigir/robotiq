@@ -157,29 +157,31 @@ class robotiqBaseSModel:
         #Message to output
         message = inputMsg.SModel_robot_input()
 
-        #Assign the values to their respective variables
-        message.gACT = (status[0] >> 0) & 0x01;
-        message.gMOD = (status[0] >> 1) & 0x03;
-        message.gGTO = (status[0] >> 3) & 0x01;
-        message.gIMC = (status[0] >> 4) & 0x03;
-        message.gSTA = (status[0] >> 6) & 0x03;
-        message.gDTA = (status[1] >> 0) & 0x03;
-        message.gDTB = (status[1] >> 2) & 0x03;
-        message.gDTC = (status[1] >> 4) & 0x03;
-        message.gDTS = (status[1] >> 6) & 0x03;
-        message.gFLT =  status[2]
-        message.gPRA =  status[3]
-        message.gPOA =  status[4]
-        message.gCUA =  status[5]
-        message.gPRB =  status[6]
-        message.gPOB =  status[7]
-        message.gCUB =  status[8]
-        message.gPRC =  status[9]
-        message.gPOC =  status[10]
-        message.gCUC =  status[11]
-        message.gPRS =  status[12]
-        message.gPOS =  status[13]
-        message.gCUS =  status[14]
+        if len(status) > 0:
+
+            #Assign the values to their respective variables
+            message.gACT = (status[0] >> 0) & 0x01;
+            message.gMOD = (status[0] >> 1) & 0x03;
+            message.gGTO = (status[0] >> 3) & 0x01;
+            message.gIMC = (status[0] >> 4) & 0x03;
+            message.gSTA = (status[0] >> 6) & 0x03;
+            message.gDTA = (status[1] >> 0) & 0x03;
+            message.gDTB = (status[1] >> 2) & 0x03;
+            message.gDTC = (status[1] >> 4) & 0x03;
+            message.gDTS = (status[1] >> 6) & 0x03;
+            message.gFLT =  status[2]
+            message.gPRA =  status[3]
+            message.gPOA =  status[4]
+            message.gCUA =  status[5]
+            message.gPRB =  status[6]
+            message.gPOB =  status[7]
+            message.gCUB =  status[8]
+            message.gPRC =  status[9]
+            message.gPOC =  status[10]
+            message.gCUC =  status[11]
+            message.gPRS =  status[12]
+            message.gPOS =  status[13]
+            message.gCUS =  status[14]
 
         return message
         
